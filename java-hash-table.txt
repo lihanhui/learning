@@ -1,0 +1,10 @@
+Hashtable - 散列+list + synchronized
+HashMap   - 散列+list ==> 散列+TreeNode （red-black-tree）
+ConcurrentHashMap - 散列 + list => 散列+TreeNode（red-black-tree）
+                    bucket中第一个元素作为锁使用
+     * Upon transfer, the old table bin contains
+     * only a special forwarding node (with hash field "MOVED") that
+     * contains the next table as its key.
+     
+StringBuffer - 提供同步方法
+StringBuilder - 不提供同步方法，适合单线程。

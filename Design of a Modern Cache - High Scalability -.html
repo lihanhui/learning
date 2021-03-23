@@ -1,0 +1,1575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" class="wf-loading" lang="en"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+  
+   <meta name="Robots" content="index,follow">  
+  
+  
+  <!-- highscalability -->
+
+  <link rel="shortcut icon" href="http://highscalability.com/favicon.png" type="image/png">
+
+  <link id="primaryStylesheet" rel="stylesheet" type="text/css" href="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/common.css">
+  
+  <link id="slideShowStylesheet" rel="stylesheet" type="text/css" href="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/squarespace-gallery-slideshow.css">
+  
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://feeds.feedburner.com/HighScalability">
+  
+  
+  <!-- Google Web Fonts -->
+  <script src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/webfont.js" type="text/javascript" async=""></script><script type="text/javascript">
+    	WebFontConfig = {};
+  
+   
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+          '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+  </script>
+
+  <script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/connection_core-min.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/json-min.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/animation-min.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/selector.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/element.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/global.js"></script><style type="text/css">#configuration-container-title-text, #pageHeaderTitle, #manager-top-bar-wrapper, #manager-top-bar .main-site-title { font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', sans-serif; font-weight: 300; letter-spacing: 0.4px; }</style>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/lightbox.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/api.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/base64.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/census.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/yui2-yui3-bridge.js"></script>
+<script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/squarespace-gallery-slideshow.js"></script>
+
+
+  <script type="text/javascript">
+  // <![CDATA[
+
+    Squarespace.Constants.SS_AUTHKEY = encodeURIComponent("");
+    Squarespace.Constants.WEBSITE_TITLE =  "High Scalability"; 
+    
+     Squarespace.Constants.CURRENT_MODULE_ID = "4867632"; 
+    
+    
+    
+    Squarespace.Constants.ADMINISTRATION_UI =  false; 
+    
+    
+     Squarespace.Constants.OBJECT_PERMALINK = "http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html"; 
+    Squarespace.Constants.CORE_APPLICATION_DOMAIN = "squarespace.com";
+    Squarespace.Constants.CORE_V6_APPLICATION_DOMAIN = "squarespace.com";
+    Squarespace.Constants.V5_FRONTSITE = "http://www.squarespace.com";
+    Squarespace.Constants.WEBSITE_ID = "426227";
+
+    
+
+    
+
+    
+
+  // ]]>
+  </script>
+
+      <title>Design of a Modern&nbsp;Cache - High Scalability - </title>
+    <meta property="og:title" content="Design of a Modern&nbsp;Cache - High Scalability - "> 
+  
+
+      <meta property="og:description" content=" 
+
+ This is a guest post by Benjamin Manes , who did engineery things for Google and is now doing e...">
+  
+
+  
+      <meta property="og:image" content="https://c2.staticflickr.com/2/1584/23979355273_e1ea8b2397_o.png">
+  
+      <meta property="og:image" content="https://docs.google.com/drawings/d/sPS-0VWjzfHp6DtvEQKU0Hg/image?w=470&amp;amp;h=177&amp;amp;rev=1&amp;amp;ac=1">
+  
+      <meta property="og:image" content="https://docs.google.com/drawings/d/sHXTg0FelH7DQ0ctP3zAnYg/image?w=511&amp;amp;h=123&amp;amp;rev=94&amp;amp;ac=1">
+  
+      <meta property="og:image" content="https://lh5.googleusercontent.com/FMyO_6DWOaAU-ulD38My9G-KpmYdAe8IQupR0n9MUEDVlDJ9xjvnJtccy2lms-rzQ3bPkbB773lPsCS67WgvOrLn-LpVBkVNCjfavzi4QD3BSNwWp0gGQEI_21rfhKytOLp-N2A">
+  
+      <meta property="og:image" content="https://lh4.googleusercontent.com/KzGH8Y4W-2qZ4bGpqmHQVb6rXb6DbYiBcrm4UwKfdDyIoiwUXAAnLSPHW4r9WEqhIVEat7pelOPiB5w_VbWI-vC_trza1WU_DVsYW2quV-1RIb9uUnY32PSPF8GklwJySYruC94">
+  
+      <meta property="og:image" content="https://docs.google.com/drawings/d/sxSo8y3_uR8QZ_NbIqnCwzA/image?w=313&amp;amp;h=121&amp;amp;rev=371&amp;amp;ac=1">
+  
+      <meta property="og:image" content="https://docs.google.com/drawings/d/scG-jsP3Cfr4YfwBQn9_bpQ/image?w=529&amp;amp;h=133&amp;amp;rev=173&amp;amp;ac=1">
+  
+      <meta property="og:image" content="https://lh5.googleusercontent.com/Zrb2daVCRylwYZpSKykg1HVxCwsJI6N4sB7KQZ6wTfVdhdZNf75PNi38kO9BKMGn0PW5hHgaEDg2JfFtqbAPU3r4kQZ1toHJ0k7b7gTFII0pXbAJw0pbJ1oPjmqL6ZVEKBHSzLY">
+  
+
+  <!-- End Heading -->
+
+  
+
+  <script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/cookie-min.js"></script>
+  <script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/eu-cookie-policy.js"></script>
+
+<script charset="utf-8" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/button.js"></script></head>
+
+<body id="modulePage4867632" class="objectId35592908">
+
+  <script type="text/javascript">
+  YAHOO.util.Event.onDOMReady(function() {
+    if (document.location.href.indexOf("SSLogoutOk=true") != -1) {
+      new Squarespace.FixedPositionTip("Logout Successful", "You have been successfully logged out.", { xMargin: 15, yMargin: 15, icon: "/universal/images/helptip-info.png", orientation: "upper-right", viewportFixed: true, autoHide: 1800 }).show();
+    }
+  });
+</script>
+
+    
+
+  <script type="text/javascript">
+    YAHOO.util.Event.onDOMReady(function() { new Squarespace.Census.hit(); } );
+  </script>
+
+  <script type="text/javascript">
+    YAHOO.util.Event.addListener(document, "keyup", function (e) { if (!e) { e = event; } if (e.keyCode == 27) { document.location.href = "/login/?returnUrl=%2Fblog%2F2016%2F1%2F25%2Fdesign-of-a-modern-cache.html"; } });
+  </script>
+
+
+
+
+  
+
+  <div id="canvasWrapper"><div id="canvas">
+  
+  
+
+  <div id="pageHeaderWrapper"><div id="pageHeader">
+
+      <div id="navigationTop"><div id="navigationTop-sectionContent2191792" class="horizontalNavigationBar"><ul class="content-navigation">
+    
+  <li class="module active-module  " id="navigationTop-moduleContentWrapper4867632">
+
+    <div id="navigationTop-moduleContent4867632">
+
+              <a id="navigationTop-moduleLink4867632" class=" " href="http://highscalability.com/"><span>Home</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper5498762">
+
+    <div id="navigationTop-moduleContent5498762">
+
+              <a id="navigationTop-moduleLink5498762" class="offsite-link " href="https://smile.amazon.com/Explain-Cloud-Like-Im-10-ebook/dp/B0765C4SNR" onclick="this.target='new';"><span>Explain the Cloud Like I'm 10</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper15178301">
+
+    <div id="navigationTop-moduleContent15178301">
+
+              <a id="navigationTop-moduleLink15178301" class=" " href="http://highscalability.com/all-time-favorites/"><span>All Time Favorites</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper4850438">
+
+    <div id="navigationTop-moduleContent4850438">
+
+              <a id="navigationTop-moduleLink4850438" class=" " href="http://highscalability.com/blog/category/example"><span>Real Life Architectures</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper10576114">
+
+    <div id="navigationTop-moduleContent10576114">
+
+              <a id="navigationTop-moduleLink10576114" class=" " href="http://highscalability.squarespace.com/blog/category/strategy"><span>Strategies</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper19697312">
+
+    <div id="navigationTop-moduleContent19697312">
+
+              <a id="navigationTop-moduleLink19697312" class="offsite-link " href="https://www.patreon.com/toddhoff" onclick="this.target='new';"><span>Support in Patreon</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper4850431">
+
+    <div id="navigationTop-moduleContent4850431">
+
+              <a id="navigationTop-moduleLink4850431" class=" " href="http://highscalability.com/advertising/"><span>Advertising</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper4850400">
+
+    <div id="navigationTop-moduleContent4850400">
+
+              <a id="navigationTop-moduleLink4850400" class=" " href="http://highscalability.com/start-here/"><span>Start Here</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper4850388">
+
+    <div id="navigationTop-moduleContent4850388">
+
+              <a id="navigationTop-moduleLink4850388" class=" " href="http://highscalability.com/contact/"><span>contact</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper5861345">
+
+    <div id="navigationTop-moduleContent5861345">
+
+              <a id="navigationTop-moduleLink5861345" class=" " href="http://feeds.feedburner.com/HighScalability"><span>RSS</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper18971493">
+
+    <div id="navigationTop-moduleContent18971493">
+
+              <a id="navigationTop-moduleLink18971493" class=" " href="https://twitter.com/highscal"><span>Twitter</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper18971509">
+
+    <div id="navigationTop-moduleContent18971509">
+
+              <a id="navigationTop-moduleLink18971509" class=" " href="http://www.facebook.com/pages/Highscalability/441249225918692"><span>Facebook</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper19028422">
+
+    <div id="navigationTop-moduleContent19028422">
+
+              <a id="navigationTop-moduleLink19028422" class=" " href="https://plus.google.com/b/116966782604206517628/116966782604206517628/posts"><span>G+</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper4847294">
+
+    <div id="navigationTop-moduleContent4847294">
+
+              <a id="navigationTop-moduleLink4847294" class=" " href="http://highscalability.com/all-posts/"><span>All Posts</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationTop-moduleContentWrapper19700860">
+
+    <div id="navigationTop-moduleContent19700860">
+
+              <a id="navigationTop-moduleLink19700860" class="offsite-link " href="https://www.amazon.com/shop/highscal" onclick="this.target='new';"><span>Amazon Store</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  </ul><br class="clearer"></div></div>
+
+    
+        
+      
+  
+      <div id="bannerAreaWrapper"><div id="bannerArea">
+
+        
+        <div id="bannerWrapper">
+          <a href="http://highscalability.com/"><img id="banner" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/HSBannerTrebuchet.jpg" alt="High Scalability" title="High Scalability"></a>
+        </div>  
+
+      
+      
+      </div></div>
+    
+    
+    
+
+      <div id="navigationBottom"><div id="navigationBottom-sectionContent2191792" class="horizontalNavigationBar"><ul class="content-navigation">
+    
+  <li class="module active-module  " id="navigationBottom-moduleContentWrapper4867632">
+
+    <div id="navigationBottom-moduleContent4867632">
+
+              <a id="navigationBottom-moduleLink4867632" class=" " href="http://highscalability.com/"><span>Home</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper5498762">
+
+    <div id="navigationBottom-moduleContent5498762">
+
+              <a id="navigationBottom-moduleLink5498762" class="offsite-link " href="https://smile.amazon.com/Explain-Cloud-Like-Im-10-ebook/dp/B0765C4SNR" onclick="this.target='new';"><span>Explain the Cloud Like I'm 10</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper15178301">
+
+    <div id="navigationBottom-moduleContent15178301">
+
+              <a id="navigationBottom-moduleLink15178301" class=" " href="http://highscalability.com/all-time-favorites/"><span>All Time Favorites</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper4850438">
+
+    <div id="navigationBottom-moduleContent4850438">
+
+              <a id="navigationBottom-moduleLink4850438" class=" " href="http://highscalability.com/blog/category/example"><span>Real Life Architectures</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper10576114">
+
+    <div id="navigationBottom-moduleContent10576114">
+
+              <a id="navigationBottom-moduleLink10576114" class=" " href="http://highscalability.squarespace.com/blog/category/strategy"><span>Strategies</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper19697312">
+
+    <div id="navigationBottom-moduleContent19697312">
+
+              <a id="navigationBottom-moduleLink19697312" class="offsite-link " href="https://www.patreon.com/toddhoff" onclick="this.target='new';"><span>Support in Patreon</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper4850431">
+
+    <div id="navigationBottom-moduleContent4850431">
+
+              <a id="navigationBottom-moduleLink4850431" class=" " href="http://highscalability.com/advertising/"><span>Advertising</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper4850400">
+
+    <div id="navigationBottom-moduleContent4850400">
+
+              <a id="navigationBottom-moduleLink4850400" class=" " href="http://highscalability.com/start-here/"><span>Start Here</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper4850388">
+
+    <div id="navigationBottom-moduleContent4850388">
+
+              <a id="navigationBottom-moduleLink4850388" class=" " href="http://highscalability.com/contact/"><span>contact</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper5861345">
+
+    <div id="navigationBottom-moduleContent5861345">
+
+              <a id="navigationBottom-moduleLink5861345" class=" " href="http://feeds.feedburner.com/HighScalability"><span>RSS</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper18971493">
+
+    <div id="navigationBottom-moduleContent18971493">
+
+              <a id="navigationBottom-moduleLink18971493" class=" " href="https://twitter.com/highscal"><span>Twitter</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper18971509">
+
+    <div id="navigationBottom-moduleContent18971509">
+
+              <a id="navigationBottom-moduleLink18971509" class=" " href="http://www.facebook.com/pages/Highscalability/441249225918692"><span>Facebook</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper19028422">
+
+    <div id="navigationBottom-moduleContent19028422">
+
+              <a id="navigationBottom-moduleLink19028422" class=" " href="https://plus.google.com/b/116966782604206517628/116966782604206517628/posts"><span>G+</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper4847294">
+
+    <div id="navigationBottom-moduleContent4847294">
+
+              <a id="navigationBottom-moduleLink4847294" class=" " href="http://highscalability.com/all-posts/"><span>All Posts</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="navigationBottom-moduleContentWrapper19700860">
+
+    <div id="navigationBottom-moduleContent19700860">
+
+              <a id="navigationBottom-moduleLink19700860" class="offsite-link " href="https://www.amazon.com/shop/highscal" onclick="this.target='new';"><span>Amazon Store</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  </ul><br class="clearer"></div></div>
+
+
+  </div></div>
+  
+  
+
+  
+
+  
+  <div id="pageBodyWrapper"><div id="pageBody">
+  
+  <div id="sidebar1Wrapper" class="verticalNavigationBarWrapper"><div class="iw-vnb1"><div class="iw-vnb2"><div class="iw-vnb3"><div class="iw-vnb4"><div id="sidebar1" class="verticalNavigationBar">
+
+  
+
+    <div id="sectionContent2251797" class="sectionWrapper  "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+      
+
+      
+        
+          <div class="content-passthrough"><div id="moduleContentWrapper4876569" class="widget-wrapper  widget-type-search"><div id="moduleContent4876569">
+
+
+<!-- <form method="get" action="/display/Search">
+	<div class="search-form-pt-wrapper">
+	  <div class="search-form-pt">
+	    <span class="queryFieldWrapper"><input type="text" class="text queryField" name="searchQuery" value=""/></span>
+	    <span class="queryButtonWrapper"><input type="submit" class="button queryButton" value="&raquo;"/></span>
+	    <input type="hidden" name="moduleId" value="4876569"/>
+	    <br class="clearer"/>
+	  </div>
+	</div>
+</form> -->
+
+<form method="get" action="/display/Search">
+	<input type="hidden" name="moduleId" value="4876569">
+	<table class="search-form-pt-wrapper search-form-table" cellspacing="0" cellpadding="0" border="0">
+		<tbody><tr class="search-form-pt search-form-row">
+			<td class="queryFieldCell search-form-cell">
+				<span class="queryFieldWrapper">
+					<input type="text" class="text queryField" name="searchQuery">
+				</span>
+			</td>
+			<td class="queryButtonCell search-form-cell">
+				<span class="queryButtonWrapper">
+					<input type="submit" class="button queryButton" value="→">
+				</span>
+			</td>
+		</tr>
+	</tbody></table> 
+</form></div></div></div>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+    <div id="sectionContent2191792" class="sectionWrapper promotedContainer "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+       <div class="caption">Top</div> 
+
+      
+        
+          <ul class="content-navigation">
+  <li class="module active-module  " id="moduleContentWrapper4867632">
+
+    <div id="moduleContent4867632">
+
+              <a id="moduleLink4867632" class=" " href="http://highscalability.com/"><span>Home</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper5498762">
+
+    <div id="moduleContent5498762">
+
+              <a id="moduleLink5498762" class="offsite-link " href="https://smile.amazon.com/Explain-Cloud-Like-Im-10-ebook/dp/B0765C4SNR" onclick="this.target='new';"><span>Explain the Cloud Like I'm 10</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper15178301">
+
+    <div id="moduleContent15178301">
+
+              <a id="moduleLink15178301" class=" " href="http://highscalability.com/all-time-favorites/"><span>All Time Favorites</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4850438">
+
+    <div id="moduleContent4850438">
+
+              <a id="moduleLink4850438" class=" " href="http://highscalability.com/blog/category/example"><span>Real Life Architectures</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper10576114">
+
+    <div id="moduleContent10576114">
+
+              <a id="moduleLink10576114" class=" " href="http://highscalability.squarespace.com/blog/category/strategy"><span>Strategies</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper19697312">
+
+    <div id="moduleContent19697312">
+
+              <a id="moduleLink19697312" class="offsite-link " href="https://www.patreon.com/toddhoff" onclick="this.target='new';"><span>Support in Patreon</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4850431">
+
+    <div id="moduleContent4850431">
+
+              <a id="moduleLink4850431" class=" " href="http://highscalability.com/advertising/"><span>Advertising</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4850400">
+
+    <div id="moduleContent4850400">
+
+              <a id="moduleLink4850400" class=" " href="http://highscalability.com/start-here/"><span>Start Here</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4850388">
+
+    <div id="moduleContent4850388">
+
+              <a id="moduleLink4850388" class=" " href="http://highscalability.com/contact/"><span>contact</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper5861345">
+
+    <div id="moduleContent5861345">
+
+              <a id="moduleLink5861345" class=" " href="http://feeds.feedburner.com/HighScalability"><span>RSS</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper18971493">
+
+    <div id="moduleContent18971493">
+
+              <a id="moduleLink18971493" class=" " href="https://twitter.com/highscal"><span>Twitter</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper18971509">
+
+    <div id="moduleContent18971509">
+
+              <a id="moduleLink18971509" class=" " href="http://www.facebook.com/pages/Highscalability/441249225918692"><span>Facebook</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper19028422">
+
+    <div id="moduleContent19028422">
+
+              <a id="moduleLink19028422" class=" " href="https://plus.google.com/b/116966782604206517628/116966782604206517628/posts"><span>G+</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4847294">
+
+    <div id="moduleContent4847294">
+
+              <a id="moduleLink4847294" class=" " href="http://highscalability.com/all-posts/"><span>All Posts</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper19700860">
+
+    <div id="moduleContent19700860">
+
+              <a id="moduleLink19700860" class="offsite-link " href="https://www.amazon.com/shop/highscal" onclick="this.target='new';"><span>Amazon Store</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+</ul>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+    <div id="sectionContent2248744" class="sectionWrapper  "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+       <div class="caption">Recent Posts</div> 
+
+      
+        
+          <div class="content-passthrough"><div id="moduleContentWrapper4867742" class="widget-wrapper  widget-type-journalarchive"><div id="moduleContent4867742">
+
+
+
+
+
+
+
+  <ul class="archive-item-list-pt">
+     <li><a href="http://highscalability.com/blog/2019/12/12/sponsored-post-fauna-sisu-educative-pa-file-sight-etleap-per.html">Sponsored Post: Fauna, Sisu, Educative, PA File Sight, Etleap, PerfOps, Triplebyte, Stream</a></li>  <li><a href="http://highscalability.com/blog/2019/12/6/stuff-the-internet-says-on-scalability-for-december-6th-2019.html">Stuff The Internet Says On Scalability For December 6th, 2019</a></li>  <li><a href="http://highscalability.com/blog/2019/11/25/egnyte-architecture-lessons-learned-in-building-and-scaling.html">Egnyte Architecture: Lessons learned in building and scaling a multi petabyte content platform</a></li>  <li><a href="http://highscalability.com/blog/2019/11/15/stuff-the-internet-says-on-scalability-for-november-15-2019.html">Stuff The Internet Says On Scalability For November 15, 2019</a></li>  <li><a href="http://highscalability.com/blog/2019/11/12/sponsored-post-fauna-sisu-educative-pa-file-sight-etleap-per.html">Sponsored Post: Fauna, Sisu, Educative, PA File Sight, Etleap, PerfOps, Triplebyte, Stream</a></li>  <li><a href="http://highscalability.com/blog/2019/11/1/stuff-the-internet-says-on-scalability-for-november-1st-2019.html">Stuff The Internet Says On Scalability For November 1st, 2019</a></li>  <li><a href="http://highscalability.com/blog/2019/10/29/how-to-improve-mysql-aws-performance-2x-over-amazon-rds-at-t.html">How to Improve MySQL AWS Performance 2X Over Amazon RDS at The Same Cost</a></li>  <li><a href="http://highscalability.com/blog/2019/10/29/sponsored-post-fauna-sisu-educative-pa-file-sight-etleap-per.html">Sponsored Post: Fauna, Sisu, Educative, PA File Sight, Etleap, PerfOps, Triplebyte, Stream</a></li>  <li><a href="http://highscalability.com/blog/2019/10/25/stuff-the-internet-says-on-scalability-for-october-25th-2019.html">Stuff The Internet Says On Scalability For October 25th, 2019</a></li>  <li><a href="http://highscalability.com/blog/2019/10/18/postgresql-connection-pooling-part-1-pros-cons.html">PostgreSQL Connection Pooling: Part 1 – Pros &amp; Cons</a></li> 
+  </ul>
+
+
+
+</div></div></div>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+  
+
+</div></div></div></div></div></div>
+  <div id="sidebar2Wrapper" class="verticalNavigationBarWrapper"><div class="iw-vnb1"><div class="iw-vnb2"><div class="iw-vnb3"><div class="iw-vnb4"><div id="sidebar2" class="verticalNavigationBar">
+
+  
+
+    <div id="sectionContent2249261" class="sectionWrapper  "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+      
+
+      
+        
+          <div class="content-passthrough"><div id="moduleContentWrapper4869210" class="widget-wrapper  widget-type-page"><div id="moduleContent4869210">
+
+
+
+
+
+  <center>
+  
+  <a href="https://www.educative.io/collection/5668639101419520/5649050225344512">
+     <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/grokking-sdi-highscalability.png">
+  </a>
+  
+  
+  <a href="https://dashboard.fauna.com/accounts/register?utm_source=HighScalability&amp;utm_medium=paid-advertising&amp;utm_campaign=Fall19Ads-HighScalability">
+     <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/125x125-javascript.png">
+  </a>
+  
+  <a href="https://www.poweradmin.com/products/file-sight/product-information/landing/?ref=highscalability&amp;utm_source=highscalability">
+     <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/file-sight-ransomware-protection.png">
+  </a>
+  
+  <a href="https://perfops.net/?utm_source=highscalability&amp;utm_medium=banner_125_125&amp;utm_campaign=global_flexible_load_balancers">
+     <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/125x125-2.png">
+  </a>
+  
+  <a href="https://getstream.io/chat/?utm_campaign=ongoing_sponsorship&amp;utm_medium=non_cpc_promotion&amp;utm_source=highscalabilitypromoted">
+     <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/stream.png" width="125" height="125">
+  </a>
+  
+  <a href="https://triplebyte.com/?ref=hs_apr18_c1">
+    <img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/triplebyte125.png">
+  </a>
+  
+  
+  <a href="http://highscalability.com/advertising">advertise</a>
+  </center>
+</div></div></div>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+    <div id="sectionContent2191793" class="sectionWrapper  "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+      
+
+      
+        
+          <ul class="content-navigation">
+  <li class="module   " id="moduleContentWrapper4708561">
+
+    <div id="moduleContent4708561">
+
+              <a id="moduleLink4708561" class=" " href="http://highscalability.com/login/?returnUrl=%2Fblog%2F2016%2F1%2F25%2Fdesign-of-a-modern-cache.html"><span>Login</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+
+  <li class="module   " id="moduleContentWrapper4869034">
+
+    <div id="moduleContent4869034">
+
+              <a id="moduleLink4869034" class=" " href="http://highscalability.com/register/"><span>Register</span></a>
+      
+
+      
+
+    </div>
+
+  </li>
+
+</ul>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+    <div id="sectionContent2248734" class="sectionWrapper  "><div class="iw-s1"><div class="iw-s2"><div class="iw-s3"><div class="iw-s4"><div class="section">
+
+      
+
+      
+        
+          <div class="content-passthrough"><div id="moduleContentWrapper4867711" class="widget-wrapper  widget-type-rss-syndicate"><div id="moduleContent4867711">
+
+
+
+  <ul class="feed-list-inline">
+    
+          <li><a href="http://feeds.feedburner.com/HighScalability" class="feed-link">High Scalability RSS</a></li>
+        
+          <li><a href="http://highscalability.com/blog/rss-comments.xml" class="feed-link">High Scalability Comments RSS</a></li>
+        
+  </ul>
+
+</div></div></div>
+
+        
+
+      
+  
+    </div></div></div></div></div></div>
+
+  
+
+  
+
+</div></div></div></div></div></div>
+  
+  
+
+  <div id="contentWrapper"><div id="content">
+    
+          
+    
+
+
+  
+
+  
+  
+      
+  <div class="journal-entry-navigation">
+
+    
+       <a class="journal-entry-navigation-prev" href="http://highscalability.com/blog/2016/1/27/tinder-how-does-one-of-the-largest-recommendation-engines-de.html">« Tinder: How does one of the largest recommendation engines decide who you'll see next?</a> | 
+      <a class="journal-entry-navigation-main" href="http://highscalability.com/blog/">Main</a>
+       | <a class="journal-entry-navigation-next" href="http://highscalability.com/blog/2016/1/22/stuff-the-internet-says-on-scalability-for-january-22nd-2016.html">Stuff The Internet Says On Scalability For January 22nd, 2016 »</a> 
+
+    
+
+  </div>
+
+
+  
+  
+  <div class="single-journal-entry-wrapper">
+    
+
+
+<div class="journal-entry-wrapper post-text authored-by-highscalability category-cache category-design">
+<div id="item35592908" class="journal-entry">
+
+  <div class="journal-entry-float-day"><span class="name">Monday</span></div><div class="journal-entry-float-date"><span class="month">Jan</span><span class="date">25</span><span class="year">2016</span></div>
+  
+  
+  
+  <div class="journal-entry-text">
+  
+      
+      <h2 class="title">
+    
+        
+    
+        <a class="journal-entry-navigation-current" href="http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html">Design of a Modern&nbsp;Cache</a>  
+     
+         
+    
+      </h2>
+      
+       <div class="journal-entry-tag journal-entry-tag-post-title"><span class="posted-on">   <img title="Date" alt="Date" class="inline-icon date-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Monday, January 25, 2016 at 8:56AM</span> </div> 
+
+    
+  
+      
+      <div class="body">
+  
+        
+        
+        
+          <p><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/23979355273_e1ea8b2397_o.png" alt="" align="RIGHT"></p>
+<p dir="ltr"><em>This is a guest post by <a href="https://github.com/ben-manes">Benjamin Manes</a>, who did engineery things for Google and is now doing engineery things for a new load documentation&nbsp;startup, <a href="https://loaddocs.co/">LoadDocs</a>.</em></p>
+<p dir="ltr">Caching is a common approach for improving performance, yet
+ most implementations use strictly classical techniques. In this article
+ we will explore the modern methods used by <a href="https://github.com/ben-manes/caffeine">Caffeine</a>, an open-source Java caching library, that <strong>yield high hit rates and excellent concurrency</strong>. These ideas can be translated to your favorite language and hopefully some readers will be inspired to do just that.</p>
+<h3 dir="ltr"><span>Eviction Policy</span></h3>
+<p dir="ltr">A cache’s <strong>eviction policy tries to predict which entries are most likely to be used again</strong>
+ in the near future, thereby maximizing the hit ratio. The Least 
+Recently Used (LRU) policy is perhaps the most popular due to its 
+simplicity, good runtime performance, and a decent hit rate in common 
+workloads. Its ability to predict the future is limited to the history 
+of the entries residing in the cache, preferring to give the last access
+ the highest priority by guessing that it is the most likely to be 
+reused again soon.</p>
+<p dir="ltr">Modern caches extend the usage history to include the 
+recent past and give preference to entries based on recency and 
+frequency. One approach for retaining history is to use a popularity 
+sketch (a compact, probabilistic data structure) to identify the “heavy 
+hitters” in a large stream of events. Take for example <a href="http://dimacs.rutgers.edu/~graham/pubs/papers/cmsoft.pdf"><span>CountMin Sketch</span></a>, which <strong>uses a matrix of counters and multiple hash functions</strong>.
+ The addition of an entry increments a counter in each row and the 
+frequency is estimated by taking the minimum value observed. This 
+approach lets us tradeoff between space, efficiency, and the error rate 
+due to collisions by adjusting the matrix’s width and depth.</p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/image_003.png" alt="" width="470" height="177"></span></p>
+<p>&nbsp;</p>
+<p dir="ltr"><a href="http://arxiv.org/pdf/1512.00727.pdf"><span>Window TinyLFU</span></a> (W-TinyLFU) <strong>uses the sketch as a filter, admitting a new entry</strong>
+ if it has a higher frequency than the entry that would have to be 
+evicted to make room for it. Instead of filtering immediately, an 
+admission window gives an entry a chance to build up its popularity. 
+This avoids consecutive misses, especially in cases like sparse bursts 
+where an entry may not be deemed suitable for long-term retention. To 
+keep the history fresh an aging process is performed periodically or 
+incrementally to halve all of the counters.</p>
+<p>&nbsp;</p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/image.png" alt="" width="511" height="123"></span></p>
+<p>&nbsp;</p>
+<p dir="ltr"><span>W-TinyLFU uses the </span><span>Segmented LRU</span><span> (SLRU) policy for long term retention. An entry starts in the </span><span>probationary segment</span><span> and on a subsequent access it is promoted to the </span><span>protected segment</span><span>
+ (capped at 80% capacity). When the protected segment is full it evicts 
+into the probationary segment, which may trigger a probationary entry to
+ be discarded. This ensures that entries with a small reuse interval 
+(the hottest) are retained and those that are less often reused (the 
+coldest) become eligible for eviction.</span></p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/FMyO_6DWOaAU-ulD38My9G-KpmYdAe8IQupR0n9MUEDVlDJ9xjvnJtccy2lm.png" alt="database.png" width="481" height="298"></span></p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/KzGH8Y4W-2qZ4bGpqmHQVb6rXb6DbYiBcrm4UwKfdDyIoiwUXAAnLSPHW4r9.png" alt="search.png" width="492" height="305"></span></p>
+<p>&nbsp;</p>
+<p dir="ltr"><span>As the database and search traces show, there is a 
+lot of opportunity to improve upon LRU by taking into account recency 
+and frequency. More advanced policies such as </span><a href="https://www.usenix.org/event/fast03/tech/full_papers/megiddo/megiddo.pdf"><span>ARC</span></a><span>, </span><a href="http://web.cse.ohio-state.edu/hpcs/WWW/HTML/publications/papers/TR-02-6.pdf"><span>LIRS</span></a><span>, and </span><a href="http://arxiv.org/pdf/1512.00727.pdf"><span>W-TinyLFU</span></a><span> narrow the gap to provide a near optimal hit rate. For additional workloads see the research papers and try our </span><a href="https://github.com/ben-manes/caffeine/wiki/Simulator"><span>simulator</span></a><span> if you have your own traces to experiment with.</span></p>
+<h3 dir="ltr"><span>Expiration Policy</span></h3>
+<p dir="ltr"><span>Expiration is often implemented as variable per entry
+ and expired entries are evicted lazily due to a capacity constraint. 
+This pollutes the cache with dead items, so sometimes a scavenger thread
+ is used to periodically sweep the cache and reclaim free space. This 
+strategy tends to work better than ordering entries by their expiration 
+time on a O(lg n) priority queue due to hiding the cost from the user 
+instead of incurring a penalty on every read or write operation.</span></p>
+<p dir="ltr">Caffeine takes a different approach by<strong> observing that most often a fixed duration is preferred</strong>.
+ This constraint allows for organizing entries on O(1) time ordered 
+queues. A time to live duration is a write order queue and a time to 
+idle duration is an access order queue. The cache can reuse the eviction
+ policy’s queues and the concurrency mechanism described below, so that 
+expired entries are discarded during the cache’s maintenance phase.</p>
+<h3 dir="ltr"><span>Concurrency</span></h3>
+<p dir="ltr">Concurrent access to a cache is viewed as a difficult problem because in <strong>most policies every access is a write to some shared state</strong>.
+ The traditional solution is to guard the cache with a single lock. This
+ might then be improved through lock striping by splitting the cache 
+into many smaller independent regions. Unfortunately that tends to have a
+ limited benefit due to hot entries causing some locks to be more 
+contented than others. When contention becomes a bottleneck the next 
+classic step has been to <strong>update only per entry metadata</strong> and use either a <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.110.8469&amp;rep=rep1&amp;type=pdf"><span>random sampling</span></a> or a <a href="https://en.wikipedia.org/wiki/Page_replacement_algorithm#Second-chance"><span>FIFO-based</span></a>
+ eviction policy. Those techniques can have great read performance, poor
+ write performance, and difficulty in choosing a good victim.</p>
+<p dir="ltr">An <a href="http://web.cse.ohio-state.edu/hpcs/WWW/HTML/publications/papers/TR-09-1.pdf"><span>alternative</span></a> is to <strong>borrow an idea from database theory where writes are scaled by using a commit log</strong>. Instead of mutating the data structures immediately, the <strong>updates are written to a log and replayed in asynchronous batches</strong>.
+ This same idea can be applied to a cache by performing the hash table 
+operation, recording the operation to a buffer, and scheduling the 
+replay activity against the policy when deemed necessary. The policy is 
+still guarded by a lock, or a try lock to be more precise, but shifts 
+contention onto appending to the log buffers instead.</p>
+<p dir="ltr">In Caffeine <strong>separate buffers are used for cache reads and writes</strong>. An access is recorded into a <strong>striped ring buffer</strong>
+ where the stripe is chosen by a thread specific hash and the number of 
+stripes grows when contention is detected. When a ring buffer is full an
+ asynchronous drain is scheduled and subsequent additions to that buffer
+ are discarded until space becomes available. When the access is not 
+recorded due to a full buffer the cached value is still returned to the 
+caller. The loss of policy information does not have a meaningful impact
+ because W-TinyLFU is able to identify the hot entries that we wish to 
+retain. By using a thread-specific hash instead of the key’s hash the 
+cache avoids popular entries from causing contention by more evenly 
+spreading out the load.</p>
+<p>&nbsp;</p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/image_002.png" alt="" width="313" height="121"></span></p>
+<p>&nbsp;</p>
+<p dir="ltr"><span>In the case of a write a more traditional concurrent 
+queue is used and every change schedules an immediate drain. While data 
+loss is unacceptable, there are still ways to optimize the write buffer.
+ Both types of buffers are written to by multiple threads but only 
+consumed by a single one at a given time. This multiple producer / 
+single consumer behavior allows for simpler, more efficient algorithms 
+to be employed.</span>&nbsp;</p>
+<p dir="ltr"><span>The buffers and fine grained writes introduce a race 
+condition where operations for an entry may be recorded out of order. An
+ insertion, read, update, and removal can be replayed in any order and 
+if improperly handled the policy could retain dangling references. The 
+solution to this is a state machine defining the lifecycle of an entry.</span></p>
+<p>&nbsp;</p>
+<p dir="ltr">&nbsp;<span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/image_004.png" alt="" width="529" height="133"></span></p>
+<p dir="ltr">In <a href="https://github.com/ben-manes/caffeine/wiki/Benchmarks#read-100-1"><span>benchmarks</span></a> the cost of the buffers is relatively cheap and scales with the underlying hash table. <strong>Reads scale linearly with the number of CPUs</strong>
+ at about 33% of the hash table’s throughput. Writes have a 10% penalty,
+ but only because contention when updating the hash table is the 
+dominant cost.</p>
+<p dir="ltr"><span><img src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/Zrb2daVCRylwYZpSKykg1HVxCwsJI6N4sB7KQZ6wTfVdhdZNf75PNi38kO9B.png" alt="" width="472" height="278"></span></p>
+<h3 dir="ltr"><span>Conclusion</span></h3>
+<p dir="ltr"><span>There are many pragmatic topics that have not been 
+covered. This could include tricks to minimize the memory overhead, 
+testing techniques to retain quality as complexity grows, and ways to 
+analyze performance to determine whether a optimization is worthwhile. 
+These are areas that practitioners must keep an eye on, because once 
+neglected it can be difficult to restore confidence in one’s own ability
+ to manage the ensuing complexity.</span></p>
+<p dir="ltr"><span>The design and implementation of </span><a href="https://github.com/ben-manes/caffeine"><span>Caffeine</span></a><span>
+ is the result of numerous insights and the hard work of many 
+contributors. Its evolution over the years wouldn’t have been possible 
+without the help from the following people:&nbsp;</span>Charles Fry, 
+Adam Zell, Gil Einziger, Roy Friedman, Kevin Bourrillion,&nbsp;Bob Lee, 
+Doug Lea, Josh Bloch, Bob Lane, Nitsan Wakart, Thomas Müeller, Dominic 
+Tootell, Louis Wasserman, and Vladimir Blagojevic. Thanks to Nitsan 
+Wakart, Adam Zell, Roy Friedman, and Will Chu for their feedback on 
+drafts of this article.</p>
+<h2>Related Articles&nbsp;</h2>
+<ul>
+<li><a href="https://news.ycombinator.com/item?id=10968521">On HackerNews</a></li>
+<li><a href="https://www.reddit.com/r/programming/comments/42s3ku/design_of_a_modern_cache/">On Reddit</a>&nbsp;</li>
+<li><a href="https://github.com/dgryski/go-tinylfu">TinyLFU</a>&nbsp;- cache admission policy</li>
+</ul>
+
+        
+  
+          
+  
+         
+  
+      </div>
+
+    
+
+  </div>
+
+      <div class="journal-entry-tag journal-entry-tag-post-body">
+      <div class="journal-entry-tag-post-body-line1"><span class="posted-by">  <a href="http://highscalability.com/blog/author/highscalability"> <img title="Author" alt="Author" class="inline-icon user-registered-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Todd Hoff</a></span> |  <span class="post-comments"><a href="http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html#comments"> <img title="Comment" alt="Comment" class="inline-icon comment-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">2 Comments</a></span> |  <span class="permalink-item"><a class="permalink" href="http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html"> <img title="Permalink" alt="Permalink" class="inline-icon permalink-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Permalink </a></span> |  <span class="share-item"><a href="javascript:noop();" onclick="Squarespace.Interaction.shareLink(this,'%2Fblog%2F2016%2F1%2F25%2Fdesign-of-a-modern-cache.html','Design%20of%20a%20Modern%20Cache');"> <img title="Share Article" alt="Share Article" class="inline-icon share-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Share Article </a></span> <span class="print-item"><a href="http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html?printerFriendly=true"> <img title="Print Article" alt="Print Article" class="inline-icon print-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Print Article </a></span> <span class="email-item"><a href="http://highscalability.com/blog/recommend/35592908"> <img title="Email Article" alt="Email Article" class="inline-icon email-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">Email Article </a></span> </div>
+      <div class="journal-entry-tag-post-body-line2"><span class="posted-in">in <span class="tag-element"><a rel="tag" href="http://highscalability.com/blog/category/cache"> <img title="Category" alt="Category" class="inline-icon category-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">cache</a></span>, <span class="tag-element"><a rel="tag" href="http://highscalability.com/blog/category/design"> <img title="Category" alt="Category" class="inline-icon category-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png">design</a></span></span>  <span class="post-snippet-1"><iframe src="//www.facebook.com/plugins/like.php?href=http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=80" scrolling="no" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true" frameborder="0"></iframe></span> <span class="post-snippet-2"><iframe id="twitter-widget-0" scrolling="no" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 61px; height: 20px;" title="Twitter Tweet Button" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/tweet_button.html" data-url="http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html" frameborder="0"></iframe><script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/widgets.js"></script></span> </div>
+      <div class="journal-entry-tag-post-body-line3"></div>
+    </div>
+  
+  
+  <div class="clearer"></div>
+
+</div>
+</div>
+
+
+
+
+
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="journal-comment-area-wrapper">
+    <div id="comments" class="journal-comment-area">
+
+      <h3 class="caption">Reader Comments  (2) </h3>
+
+      
+        
+  <div class="comment-wrapper authored-by-None">
+  <div class="comment" id="comment21811503">
+
+    <div id="item21811503" class="body">
+
+      <p><i>..."some locks to be more contented than others..."</i>  My locks are always contented :-) I think you meant "contended".</p>
+
+    </div>
+    <div class="signature">
+
+      December 17, 2017 | 
+  <a href="http://highscalability.com/contributor/30119867" title="Unregistered Commenter">
+  <img title="Unregistered Commenter" alt="Unregistered Commenter" class="inline-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png" style="background:transparent url(/universal/images/core-resources/icons/smalllight/user-unregistered.png) top left no-repeat;">Jim Garrison
+  
+  </a>
+
+
+
+      
+        
+
+        
+
+      
+
+    </div>
+
+  </div>
+  </div>
+
+
+  <div class="comment-wrapper authored-by-None">
+  <div class="comment" id="comment21832192">
+
+    <div id="item21832192" class="body">
+
+      <p>I was thinking the same, but I would contend that you should be content with the good article and not be so contentious</p>
+
+    </div>
+    <div class="signature">
+
+      February 28, 2018 | 
+  <a href="http://highscalability.com/contributor/30242878" title="Unregistered Commenter">
+  <img title="Unregistered Commenter" alt="Unregistered Commenter" class="inline-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png" style="background:transparent url(/universal/images/core-resources/icons/smalllight/user-unregistered.png) top left no-repeat;">anon
+  
+  </a>
+
+
+
+      
+        
+
+        
+
+      
+
+    </div>
+
+  </div>
+  </div>
+
+
+
+        
+
+      
+
+    </div>
+    </div>
+
+    
+      <div class="journal-add-comment-area-wrapper">
+  
+          
+            
+            
+  <script type="text/javascript">
+  // <![CDATA[
+
+    var isAddCommentsVisible = true;
+
+    function toggleReferenceMode() {
+      if (isAddCommentsVisible) {
+        hideObject(document.getElementById("add-comment-area"));
+        showObject(document.getElementById("add-reference-area"));
+      } else {
+        showObject(document.getElementById("add-comment-area"));
+        hideObject(document.getElementById("add-reference-area"));
+      }
+      isAddCommentsVisible = !isAddCommentsVisible;
+    }
+
+    E.addListener("postform", "keydown", Squarespace.SessionAuthorizationKey.acquireAuthKey, '');
+
+  // ]]>
+  </script>
+
+  <form method="post" style="margin: 0; padding: 0;" name="postform" id="postform" action="/process/CreateJournalEntryComment?moduleId=4867632&amp;entryId=35592908"> 
+
+     <input type="hidden" name="currentPage" value="1"> 
+ 
+    <div class="notice-box" style="margin-top: 2em;" id="add-comment-area">
+
+      
+                              <h3 class="caption"><img title="Post" alt="Post" class="inline-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png" style="background:transparent url(/universal/images/core-resources/icons/smalllight/comment.png) top left no-repeat;">Post a New Comment</h3>
+          
+        
+
+        <div class="caption-text">
+
+          Enter your information below to add a new comment.
+
+          
+
+        </div>
+
+        
+
+        <script type="text/javascript" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/storable-fields.js"></script>
+
+        
+          <div class="input-field">
+            
+            <div id="authorName_title" class="title">
+               Author: 
+
+              &nbsp;<a id="storedFieldControls" style="display: none; font-size: 9px;" href="javascript:forgetSavedFields();">(forget stored information)</a>
+            </div>
+            <input class="text" type="text" style="width: 200px;" name="authorName" id="authorName" maxlength="50" tabindex="2">
+          </div>
+
+          <div class="input-field">
+            
+            <div id="authorEmail_title" class="title"> Author Email (optional): 
+</div>
+            <input class="text" type="text" style="width: 200px;" name="authorEmail" id="authorEmail" maxlength="255" tabindex="3">
+          </div>
+
+          <div class="input-field">
+            
+            <div id="authorUrl_title" class="title"> Author URL (optional): 
+</div>
+            <input class="text" type="text" style="width: 200px;" name="authorUrl" id="authorUrl" maxlength="255" tabindex="4">
+          </div>
+
+          <script type="text/javascript">
+
+            YAHOO.util.Event.addListener(window, "load", function() {
+
+              document.getElementById("storedFieldControls").style.display = (Squarespace.StorableFields.isDataSaved("authorName", "authorEmail", "authorUrl") ? "inline" : "none");
+              Squarespace.StorableFields.recall("authorName", "authorEmail", "authorUrl");
+
+            });
+
+            function forgetSavedFields() {
+
+              Squarespace.StorableFields.forget("authorName", "authorEmail", "authorUrl");
+              document.getElementById("storedFieldControls").style.display = "none";
+
+            }
+
+          </script>
+
+        
+
+        <script type="text/javascript">
+          function expandBody() { b = document.getElementById("body"); b.style.height = (b.offsetHeight + 40) + "px"; }
+          function shrinkBody() { b = document.getElementById("body"); b.style.height = (b.offsetHeight - 40) + "px"; }
+        </script>
+
+        
+        <div id="body_title" style="padding-bottom: 5px; float: left;"> Post: 
+</div>
+        <div style="padding-bottom: 5px; float: right;"><a title="Increase the size of the comment area." href="javascript:expandBody();">↓</a> | <a title="Decrease the size of the comment area." href="javascript:shrinkBody();">↑</a></div>
+        <div class="clearer">&nbsp;</div>
+        <div style="padding-bottom: 5px;"><textarea rows="15" cols="60" name="body" id="body" tabindex="5"></textarea></div>
+        <div style="padding-bottom: 5px;">Some HTML allowed: &lt;a 
+href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; 
+&lt;b&gt; &lt;blockquote cite=""&gt; &lt;code&gt; &lt;em&gt; &lt;i&gt; 
+&lt;strike&gt; &lt;strong&gt;</div>
+
+        
+
+        
+
+        <div class="footer">
+
+                      <div class="notice-box-alert">
+              <div class="icon"><img title="Alert" alt="Alert" class="inline-icon" rel="smalllight" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/transparent.png" style="background:transparent url(/universal/images/core-resources/icons/smalllight/alert.png) top left no-repeat;"></div>
+              <div class="text">
+                <strong>Comment Moderation Enabled</strong><br>
+                Your comment will not appear until it has been cleared by a website editor.
+              </div>
+            </div>
+          
+
+                    
+            <p style="padding-bottom: 10px;"><input class="checkbox" type="checkbox" name="followOptIn" id="followOptIn" value="true" tabindex="6">
+              <span onclick="toggleNotify()" style="cursor: pointer; cursor: hand">Notify me of follow-up comments via email.</span>
+            </p>
+            <br>
+
+          
+
+          <input type="hidden" id="authKey" name="authKey" value="">
+          <input style="width: 150px;" tabindex="6" class="button" type="button" name="createPostButton" id="createPostButton" value="Create Post" onclick="submitContent(true);"> &nbsp;&nbsp;
+          <input style="width: 150px;" tabindex="7" class="button" type="button" name="previewPostButton" id="previewPostButton" value="Preview Post" onclick="submitContent(false);">
+
+        </div>
+
+      
+
+    </div>
+
+  </form>
+
+  <script type="text/javascript">
+  // <![CDATA[
+
+    function toggleNotify() {
+      document.getElementById("followOptIn").click();
+    }
+              
+    function submitContent(isFinal) {
+      if (isFinal) {
+        document.getElementById("postform").action += "&finalize=true";
+        Squarespace.StorableFields.save("authorName", "authorEmail", "authorUrl");
+      }
+      Squarespace.Form.smartSubmit("postform");
+    }
+
+  // ]]>
+  </script>
+
+  
+
+
+  
+            
+  
+          
+  
+        
+  
+      </div>
+        
+    
+  
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+  
+
+</div></div> <!-- Content -->
+  
+    
+  
+    </div></div> <!-- Page Body -->
+
+    
+    
+    <div id="pageFooterWrapper"><div id="pageFooter">
+  
+              Copyright © 2018, Todd Hoff.  All rights reserved.
+      
+  
+      
+  
+    </div></div>
+  
+  </div></div> <!-- Canvas -->
+  
+   
+
+
+  <div class="clearer" id="bodyClearer"></div>
+
+  
+
+
+
+
+<iframe scrolling="no" allowtransparency="true" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><div id="sslightbox_title" class="squarespace-lightbox-description" style="color: rgb(233, 233, 233); font: 28px Arial; position: absolute; top: 0px; left: 0px; z-index: 950; display: none; cursor: pointer; opacity: 0;"></div><div id="sslightbox_description" style="color: rgb(233, 233, 233); position: absolute; font: 14px / 20px Arial; top: 0px; left: 0px; z-index: 950; display: none; cursor: pointer; opacity: 0;"></div><div id="sslightbox_overlay" title="Click to Close" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 900; display: none; cursor: pointer; opacity: 0;"></div><a id="sslightbox_previmg" href="javascript:SSLightbox.switchImage(-1);" style="background-color: transparent; background-image: url(&quot;/universal/images/overlay-arrow-left.png&quot;); position: absolute; display: none; width: 35px; height: 50px; left: 8px; z-index: 950; cursor: pointer; opacity: 0;"></a><a id="sslightbox_nextimg" href="javascript:SSLightbox.switchImage(1);" style="background-color: transparent; background-image: url(&quot;/universal/images/overlay-arrow-right.png&quot;); position: absolute; display: none; width: 35px; height: 50px; right: 8px; z-index: 950; cursor: pointer; opacity: 0;"></a><div id="sslightbox_imgholder" style="position: absolute; top: 261.5px; left: 531.5px; background-color: rgb(255, 255, 255); opacity: 0; z-index: 950; width: 200px; height: 200px; display: none;"><span id="sslightbox_imgwrapper" classname="thumbnail-wrapper" style="position: absolute; top: 14px; left: 14px;"><img id="sslightbox_img" style="position: absolute; top: 0px; left: 0px; opacity: 0; display: none; z-index: 995; padding: 0px; margin: 0px; border: 0px none; cursor: pointer;"></span></div><img id="sslightbox_loadimg" src="Design%20of%20a%20Modern%C2%A0Cache%20-%20High%20Scalability%20-_files/loading.gif" style="position: absolute; opacity: 0; width: 48px; height: 54px; z-index: 990; padding: 0px; margin: 0px; border: 0px none; cursor: pointer; left: 607.5px; top: 334.5px; display: none;"><a id="sslightbox_scrollrightimg" href="javascript:SSLightbox.scrollThumbnails(1);" class="picture-gallery-thumbnail-scroll-right" style="position: absolute; display: block; z-index: 800; top: -5000px; left: -10000px;"></a><a id="sslightbox_scrollleftimg" href="javascript:SSLightbox.scrollThumbnails(-1);" class="picture-gallery-thumbnail-scroll-left" style="position: absolute; display: block; z-index: 800; top: -5000px; left: -10000px;"></a></body></html>
