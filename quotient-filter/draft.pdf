@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VMware Research | Errors</title>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<meta content='width=device-width, initial-scale=1' name='viewport'>
+<meta content='VMware Research | Errors' property='og:title'>
+<meta content='VMware Research Group: We bring development to the VeRGe of research, and research to the VeRGe of production' property='og:description'>
+<meta content='https://research.vmware.com/assets/vmware-research-789d89aa48c565d4088151a0b195354d057452729b7799fb278a4c6acfbdd3c9.png' property='og:image'>
+<meta content='website' property='og:type'>
+<meta content='VMware Research | Errors' name='twitter:title'>
+<meta content='VMware Research Group: We bring development to the VeRGe of research, and research to the VeRGe of production' name='twitter:description'>
+<meta content='https://research.vmware.com/assets/vmware-research-789d89aa48c565d4088151a0b195354d057452729b7799fb278a4c6acfbdd3c9.png' name='twitter:image'>
+<meta content='VMware Research | Errors' itemprop='name'>
+<meta content='VMware Research Group: We bring development to the VeRGe of research, and research to the VeRGe of production' itemprop='description'>
+<meta content='https://research.vmware.com/assets/vmware-research-789d89aa48c565d4088151a0b195354d057452729b7799fb278a4c6acfbdd3c9.png' itemprop='image'>
+<link rel="shortcut icon" type="image/x-icon" href="https://www.vmware.com/favicon.ico" />
+<link rel="apple-touch-icon" type="image/png" href="https://www.vmware.com/favicon.ico" />
+<link rel="stylesheet" media="all" href="/assets/application-13c284eea20dbf0bc1b7ddf62315e58418a63b1b57b5ba59f37732aef814692a.css" data-turbolinks-track="true" />
+<link rel="stylesheet" media="all" href="https://www.vmware.com/content/dam/vmwaredesigns/scrapercontent/responsive.css" />
+<script src="/assets/modernizr-0fb4b6f86a1be61eec5868ffe5109a2ef2cfe13c3efc5f3d2146339459d3cd8c.js"></script>
+<script src="/assets/application-aba5642620177dc97e275007352fceca6b9262b5d8afb46f8c36e98ba44b4557.js"></script>
+<meta content='https://tags.tiqcdn.com/utag/vmware/microsites-privacy/prod/utag.js' name='microsites-utag'>
+<meta content='https://tags.tiqcdn.com/utag/vmware/microsites-at-privacy/prod/utag.js' name='microsites-at-utag'>
+<meta content='b9242434-9feb-47be-a894-3a9e658fdd50' name='onetrust-data-domain'>
+<script src="https://api.demandbase.com/api/v2/ip.js?key=e1f90d4a92d08428627aa34a78d58cc3e866c84f&amp;var=db"></script>
+<script src="https://tags.tiqcdn.com/utag/vmware/microsites-privacy/prod/utag.sync.js"></script>
+<script src="//www.vmware.com/files/templates/inc/utag_data.js"></script>
+<script>
+  var utag_data = { "Microsites": "research.vmware.com" };
+</script>
+<script class='optanon-category-C0002' type='text/plain'>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-58786694-1', {
+'cookieName': '_ga',
+'cookieDomain': 'research.vmware.com',
+'cookieExpires': 60 * 60 * 24 * 30 * 12  // Time in seconds.
+});
+ga('send', 'pageview');
+
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'ot-sdk-btn';
+    button.className = 'ot-sdk-show-settings';
+    button.innerHTML = 'Cookie Settings';
+    
+    document.getElementsByTagName('body')[0].appendChild(button);
+  }, false);
+</script>
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="qypDUEQkBAiTVXw9kBfAQcXlxpCMyU8uLpb/g0eTnAhjepZxGYyhjZJpZUvYW+D6RJnrAy1vYJm/vn7HaJReEQ==" />
+</head>
+
+<body class='errors_error_404 overflow-x-auto-l overflow-x-hidden site'>
+<div id='page-header-custom'>
+<header>
+<div class='header-group' id='utiltybarheader'>
+<div class='re-comtainer'>
+<div class='top-header clearfix'>
+<div class='hdr-left-custom'>
+<div class='hdr-top-logo'>
+<a class="vmware-logo-research" target="_self" aria-label="VMware&reg; Research" href="/"></a>
+</div>
+</div>
+<div class='hdr-right-custom'>
+<div class='hdr-link-group'>
+<div class='hdr-link'>
+<form id="globalsearch" class="wrapperSearch" action="/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+<div class='hdr-search'>
+<input type="text" name="q" id="ub-search" placeholder="Search" class="input-hidden" role="searchbox" aria-role="searchbox" />
+<a aria-label='Search research.vmware.com'>
+<span class='re-icon re-lens'></span>
+</a>
+</div>
+</form>
+
+
+</div>
+<button aria-label='Utility Navigation' class='navbar-toggle hdr-mobile-group-toggle' data-target='#hdr-mobile-group' data-toggle='collapse' type='button'>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<div class='hdr-mobile-group collapse navbar-collapse' id='hdr-mobile-group'>
+<div class='hdr-link'>
+<div>
+<a class="mobile-group-item ic-pipe" target="_target" title="Blog" href="//blogs.vmware.com/research">Blog</a>
+</div>
+<div>
+<a class="mobile-group-item ic-pipe" target="_target" title="VMware Academic Program" href="//www.vmware.com/company/research/faculty-programs.html">VMware Academic Program</a>
+</div>
+<div class='mobile-group-item'>
+<a href="/login">Login
+<i aria-hidden='true' class='fa fa-chevron-right'></i>
+</a></div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+</div>
+
+<div id='page-side-nav-custom'>
+<div class='header-group'>
+<div class='top-navigation'>
+<nav class='tn-group'>
+<div class='re-comtainer'>
+<div class='tn-links'>
+<button aria-label='Primary Menu' class='navbar-toggle' data-target='#topNav' data-toggle='collapse' type='button'>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='btn-text'>Menu</span>
+</button>
+<div class='collapse navbar-collapse' id='topNav'>
+<ul class='clearfix'>
+<li><a href="/projects">Projects</a></li>
+<li><a href="/researchers">Team</a></li>
+<li><a href="/announcements">Announcements</a></li>
+<li><a href="/publications">Publications</a></li>
+<li><a href="/pages/about">About Us</a></li>
+<li><a href="/pages/directions">Directions</a></li>
+<li><a href="/pages/recruiting">Recruiting</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class='gradient-hr'></div>
+</nav>
+</div>
+</div>
+</div>
+
+<div class='wrapper'>
+<div class='site-content center mw10'>
+<div class='push-top'></div>
+
+
+
+<div class='mb3 mb4-l mh3 mh4-l'><div class='tc'>
+<h1>
+404:
+<span class='light'>Page Not Found</span>
+</h1>
+</div>
+</div>
+
+</div>
+<div class='push-bottom'></div>
+<div id='page-footer'></div>
+
+</div>
+<script src="https://www.vmware.com/bin/vmware/template/scrapercontent.us.js"></script>
+<script src="https://www.vmware.com/content/dam/vmwaredesigns/scrapercontent/responsive.js"></script>
+</body>
+</html>
