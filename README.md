@@ -1,2 +1,2 @@
 # learning
-Some notes on leaning
+Some notes on learning
